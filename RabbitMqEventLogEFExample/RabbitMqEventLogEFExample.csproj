@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>cd20af05-3362-4697-a3f8-29112fbac7bc</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection\EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\EventBus.RabbitMQ.Extensions.DependencyInjection\EventBus.RabbitMQ.Extensions.DependencyInjection.csproj" />
+  </ItemGroup>
+
+
+</Project>

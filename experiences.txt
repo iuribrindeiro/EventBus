@@ -1,0 +1,35 @@
+50 messages with a sleep of 350ms
+ESTIMATED WAIT: 17500
+
+------- 1 CONSUMER -------
+INIT: 29:16:600
+END: 29:37:575
+
+TOTAL WAIT: 20975
+
+------- 05 CONSUMERS -------
+INIT: 46:09:409
+END: 46:15:633
+
+TOTAL WAIT: 6224
+
+
+------- 08 CONSUMERS -------
+INIT: 52:00:587
+END: 52:05:096
+
+TOTAL WAIT: 4509
+
+
+------- 10 CONSUMERS -------
+INIT: 42:53:366
+END: 42:57:459
+
+TOTAL WAIT: 4093
+
+
+------- 50 CONSUMERS -------
+INIT: 48:48:927
+END: 48:53:389
+
+TOTAL WAIT: 4462
