@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.EventLog.EntityFra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.EventLog", "EventBus.EventLog\EventBus.EventLog.csproj", "{0920F98A-9B87-45EA-B583-E28AAE871219}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection", "EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection\EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection.csproj", "{A8F70F5F-DA7E-44AF-ABA3-A11C08D1A85A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection", "EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection\EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection.csproj", "{A8F70F5F-DA7E-44AF-ABA3-A11C08D1A85A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMqEventLogEFExample", "RabbitMqEventLogEFExample\RabbitMqEventLogEFExample.csproj", "{F4A30101-5111-4786-A3D7-81C43BBF6BCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqEventLogEFExample", "RabbitMqEventLogEFExample\RabbitMqEventLogEFExample.csproj", "{F4A30101-5111-4786-A3D7-81C43BBF6BCA}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{F4A30101-5111-4786-A3D7-81C43BBF6BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4A30101-5111-4786-A3D7-81C43BBF6BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4A30101-5111-4786-A3D7-81C43BBF6BCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

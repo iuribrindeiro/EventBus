@@ -6,9 +6,6 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["RabbitExample/RabbitExample.csproj", "RabbitExample/"]
-COPY ["EventBus.RabbitMQ.Extensions.DependencyInjection/EventBus.RabbitMQ.Extensions.DependencyInjection.csproj", "EventBus.RabbitMQ.Extensions.DependencyInjection/"]
-COPY ["EventBus.RabbitMQ/EventBus.RabbitMQ.csproj", "EventBus.RabbitMQ/"]
-COPY ["EventBus/EventBus.csproj", "EventBus/"]
 RUN dotnet restore "RabbitExample/RabbitExample.csproj"
 COPY . .
 WORKDIR "/src/RabbitExample"

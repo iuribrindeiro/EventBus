@@ -33,7 +33,16 @@ namespace RabbitExample
                 {
                     _eventSubscriber
                         .Subscribe<NewProductAddedEvent>()
-                        .OnFailure(cf=> cf.RetryForTimes(10).ForEachRetryWait(error => TimeSpan.FromSeconds(2)));
+                        .OnFailure(cf=> cf.RetryForever().ForEachRetryWait(error =>
+                        {
+                            if (error.Exception is Exception)
+                                return TimeSpan.FromSeconds(10);
+
+                            if (error.Event.DomainProp)
+                                return TimeSpan.FromSeconds(20);
+
+                            return TimeSpan.FromSeconds(2);
+                        }));
 
                     await _eventSubscriber.StartListeningAsync();
                     _eventsSubscribed = true;

@@ -9,7 +9,8 @@ namespace EventBus.EventLog.EntityFrameworkCore
     public class EventLogDbContext : DbContext, IEventLogDatabaseCreator
     {
         public EventLogDbContext(DbContextOptions<EventLogDbContext> options) : base(options)
-        {}
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

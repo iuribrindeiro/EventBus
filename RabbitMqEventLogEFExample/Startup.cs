@@ -1,15 +1,12 @@
-using System.Collections.Generic;
 using EventBus.EventLog.EntityFrameworkCore;
 using EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection;
 using EventBus.RabbitMQ.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace RabbitMqEventLogEFExample
 {

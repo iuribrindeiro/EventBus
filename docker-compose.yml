@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  sql-server: 
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Admin*123
+    ports:
+      - "1433:1433"
+  rabbitmqeventlogefexample:
+    image: ${DOCKER_REGISTRY-}rabbitmqeventlogefexample
+    build:
+      context: .
+      dockerfile: RabbitMqEventLogEFExample/Dockerfile
+    environment:
+      - CUSTOMCONNSTR_ApplicationDb=Server=sql-server;Initial Catalog=ApplicationDb;User Id=sa;Password=Admin*123
+      - CUSTOMCONNSTR_EventLogDb=Server=sql-server;Initial Catalog=EventLogDb;User Id=sa;Password=Admin*123
+    depends_on:
+        - sql-server
+
+  rabbitexample:
+    image: ${DOCKER_REGISTRY-}rabbitexample
+    build:
+      context: .
+      dockerfile: RabbitExample/Dockerfile
+    environment:
+      - EventBus__RabbitMq__ConsumersCount=50
+
+

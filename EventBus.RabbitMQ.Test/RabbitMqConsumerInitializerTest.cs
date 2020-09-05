@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
@@ -39,27 +40,27 @@ namespace EventBus.RabbitMQ.Test
         }
 
         [Test]
-        public void WhenInitializingConsumerChannelShouldTryConnectIfNotConnectedToRabbit()
+        public async Task WhenInitializingConsumerChannelShouldTryConnectIfNotConnectedToRabbit()
         {
             _rabbitMqPersistentConnection.IsConnected.Returns(false);
-            _sut.InitializeConsumerChannel();
+            await _sut.InitializeConsumersChannelsAsync();
             _rabbitMqPersistentConnection.Received(1).TryConnect();
         }
 
         [Test]
-        public void WhenInitializingConsumerChannelShouldNotTryConnectIfAlreadyConnectedToRabbit()
+        public async Task WhenInitializingConsumerChannelShouldNotTryConnectIfAlreadyConnectedToRabbit()
         {
             _rabbitMqPersistentConnection.IsConnected.Returns(true);
-            _sut.InitializeConsumerChannel();
+            await _sut.InitializeConsumersChannelsAsync();
             _rabbitMqPersistentConnection.DidNotReceive().TryConnect();
         }
 
         [Test]
-        public void WhenInitializingConsumerChannelEnsureThatQueueAndExchangeAreCreatedBeforeConsumerStarts()
+        public async Task WhenInitializingConsumerChannelEnsureThatQueueAndExchangeAreCreatedBeforeConsumerStarts()
         {
             var queueName = _rabbitMqEventBusOptions.QueueName;
             var exchangeName = _rabbitMqEventBusOptions.ExchangeName;
-            _sut.InitializeConsumerChannel();
+            await _sut.InitializeConsumersChannelsAsync();
             Received.InOrder(() =>
             {
                 _model.ExchangeDeclare(exchange: exchangeName, type: "topic");
