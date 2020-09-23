@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqEventLogEFExample",
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus.EventLog.MongoDb", "..\EventBus.EventLog.MongoDb\EventBus.EventLog.MongoDb.csproj", "{91C2C0D3-0E0E-497D-B37A-9F8138032DB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus.EventLog.MongoDb.Extensions.DependencyInjection", "..\EventBus.EventLog.MongoDb.Extensions.DependencyInjection\EventBus.EventLog.MongoDb.Extensions.DependencyInjection.csproj", "{BF2BB6B3-B203-4E70-B766-2A3AFEE4AD48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FA9BBA0-4FC8-4C60-BB62-0BD6A7BBA862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91C2C0D3-0E0E-497D-B37A-9F8138032DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91C2C0D3-0E0E-497D-B37A-9F8138032DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91C2C0D3-0E0E-497D-B37A-9F8138032DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91C2C0D3-0E0E-497D-B37A-9F8138032DB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF2BB6B3-B203-4E70-B766-2A3AFEE4AD48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF2BB6B3-B203-4E70-B766-2A3AFEE4AD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF2BB6B3-B203-4E70-B766-2A3AFEE4AD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF2BB6B3-B203-4E70-B766-2A3AFEE4AD48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

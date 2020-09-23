@@ -33,17 +33,19 @@ namespace RabbitExample
                 {
                     _eventSubscriber
                         .Subscribe<NewProductAddedEvent>()
-                        .OnFailure(cf=> cf.RetryForever().ForEachRetryWait(error =>
+                        .OnFailure(cf=>
                         {
-                            if (error.Exception is Exception)
-                                return TimeSpan.FromSeconds(10);
+                            cf.RetryForTimes(5)
+                                .ForEachRetryWait(TimeSpan.FromSeconds(5))
+                                .ShouldRetry()
+                                .ShouldDiscardEventAfterFailures();
+                        });
 
-                            if (error.Event.DomainProp)
-                                return TimeSpan.FromSeconds(20);
-
-                            return TimeSpan.FromSeconds(2);
-                        }));
-
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        await scope.ServiceProvider.GetService<IEventPublisher>().PublishAsync(new NewProductAddedEvent());   
+                    }
+                    
                     await _eventSubscriber.StartListeningAsync();
                     _eventsSubscribed = true;
                 }

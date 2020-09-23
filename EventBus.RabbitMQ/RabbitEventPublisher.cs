@@ -45,26 +45,29 @@ namespace EventBus.RabbitMQ
             _logger.LogInformation($"Event published");
         }
 
-        public async Task PublishManyAsync(Event[] events)
+        public Task PublishManyAsync(Event[] events) 
+            => PublishManyAsync(events.Select(e => new EventPublishRequest(JsonConvert.SerializeObject(e), e.Id, e.Name)).ToArray());
+
+        public async Task PublishManyAsync(EventPublishRequest[] publishRequests)
         {
-            _logger.LogInformation($"Publishing {events.Count()} events");
+            _logger.LogInformation($"Publishing {publishRequests.Length} events");
             if (!_persistentConnection.IsConnected)
                 _persistentConnection.TryConnect();
 
             using var channel = _persistentConnection.CreateModel();
             var batchPublish = channel.CreateBasicPublishBatch();
-            foreach (var @event in events)
+            foreach (var publishRequest in publishRequests)
             {
                 var props = channel.CreateBasicProperties();
-                var eventName = @event.GetType().Name;
-                _logger.LogInformation($"Adding event {eventName} with id: {@event.Id} to batch");
-                props.CorrelationId = @event.Id.ToString();
+                var eventName = publishRequest.EventName;
+                _logger.LogInformation($"Adding event {eventName} with id: {publishRequest.EventId} to batch");
+                props.CorrelationId = publishRequest.EventId.ToString();
                 batchPublish
-                    .Add(_options.ExchangeName, 
-                        routingKey: eventName, 
-                        mandatory: false, 
-                        properties: props, 
-                        body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event)));
+                    .Add(_options.ExchangeName,
+                        routingKey: eventName,
+                        mandatory: false,
+                        properties: props,
+                        body: Encoding.UTF8.GetBytes(publishRequest.EventBody));
             }
 
             batchPublish.Publish();

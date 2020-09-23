@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using OperationResult;
 
 namespace EventBus.EventLog
 {
     public interface IEventLogPublisher
     {
-        Task PublishPendingEventLogs(Guid transactionId);
+        Task<Result> PublishPendingEventLogs(Guid transactionId);
     }
 }

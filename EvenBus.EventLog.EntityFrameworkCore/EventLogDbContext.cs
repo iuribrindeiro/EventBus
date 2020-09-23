@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace EventBus.EventLog.EntityFrameworkCore
 {
-    public class EventLogDbContext : DbContext, IEventLogDatabaseCreator
+    public class EventLogDbContext : DbContext, IEventLogDatabaseCreator, IEventLogUnitOfWork
     {
         public EventLogDbContext(DbContextOptions<EventLogDbContext> options) : base(options)
         {
@@ -21,7 +20,8 @@ namespace EventBus.EventLog.EntityFrameworkCore
 
         public DbSet<EventLog> EventLogs { get; set; }
 
-
+        public Task SaveChangesAsync() => SaveChangesAsync();
+        
         private void SetCurrentTransactionId(Guid transactionId)
         {
             var eventLogs = ChangeTracker.Entries()

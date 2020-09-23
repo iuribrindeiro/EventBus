@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace EventBus.EventLog.EntityFrameworkCore
 {
-    internal class PersistentEventTransaction : IPersistentEventTransaction
+    public class EFPersistentEventTransaction : IPersistentEventTransaction
     {
         private readonly IDbContextApplicationProvider _dbContextApplicationProvider;
         private readonly EventLogDbContext _eventLogDbContext;
         private readonly IEventPublisher _eventPublisher;
-        private readonly ILogger<PersistentEventTransaction> _logger;
+        private readonly ILogger<EFPersistentEventTransaction> _logger;
 
-        public PersistentEventTransaction(
+        public EFPersistentEventTransaction(
             IDbContextApplicationProvider dbContextApplicationProvider, 
-            EventLogDbContext eventLogDbContext, IEventPublisher eventPublisher, ILogger<PersistentEventTransaction> logger)
+            EventLogDbContext eventLogDbContext, IEventPublisher eventPublisher, ILogger<EFPersistentEventTransaction> logger)
         {
             _dbContextApplicationProvider = dbContextApplicationProvider;
             _eventLogDbContext = eventLogDbContext;
@@ -34,9 +34,6 @@ namespace EventBus.EventLog.EntityFrameworkCore
                 transaction.Commit();
                 return transaction.TransactionId;
             });
-        }
-
-        public void AddEvent(Event @event)
-            => _eventLogDbContext.Add(new EventLog(@event));
+        }   
     }
 }

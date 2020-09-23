@@ -16,7 +16,7 @@ namespace RabbitExample
         public async Task Handle(NewProductAddedEvent notification, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"there we go...");
-            //throw new Exception("bad idea");
+            throw new Exception("bad idea");
             Thread.Sleep(TimeSpan.FromMilliseconds(350));
         }
     }

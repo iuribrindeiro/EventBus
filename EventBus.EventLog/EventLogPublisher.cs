@@ -1,47 +1,50 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using OperationResult;
 
-[assembly:InternalsVisibleTo("EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection")]
-namespace EventBus.EventLog.EntityFrameworkCore
+[assembly: InternalsVisibleTo("EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection")]
+namespace EventBus.EventLog
 {
-    internal class EventLogPublisher : IEventLogPublisher
+    public class EventLogPublisher : IEventLogPublisher
     {
-        private readonly EventLogDbContext _eventLogDbContext;
+        private readonly IEventLogService _eventLogService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILogger<EventLogPublisher> _logger;
+        private readonly IEventLogUnitOfWork _eventLogUnitOfWork;
 
-        public EventLogPublisher(EventLogDbContext eventLogDbContext, IEventPublisher eventPublisher, ILogger<EventLogPublisher> logger)
+        public EventLogPublisher(IEventLogService eventLogService, IEventPublisher eventPublisher, 
+            ILogger<EventLogPublisher> logger, IEventLogUnitOfWork eventLogUnitOfWork)
         {
-            _eventLogDbContext = eventLogDbContext;
+            _eventLogService = eventLogService;
             _eventPublisher = eventPublisher;
             _logger = logger;
+            _eventLogUnitOfWork = eventLogUnitOfWork;
         }
 
-        public async Task PublishPendingEventLogs(Guid transactionId)
+        public async Task<Result> PublishPendingEventLogs(Guid transactionId)
         {
             using (_logger.BeginScope($"transactionId: {transactionId}"))
             {
                 var eventLogs = RetrievePendingEventLogsInTransaction(transactionId);
                 try
                 {
-                    await _eventPublisher.PublishManyAsync(eventLogs.Select(e => e.Event).ToArray());
+                    await _eventPublisher.PublishManyAsync(eventLogs.Select(e => new EventPublishRequest(e.Content, e.EventId, e.EventName)).ToArray());
                     SetAllEventsAsSent(eventLogs);
+                    return Result.Success();
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex,
                         $"Failed to publish events {eventLogs.Select(e => e.EventName)} with ids {eventLogs.Select(e => e.Id)}");
                     SetAllEventsAsError(eventLogs, ex);
-                    throw;
+                    return Result.Error(ex);
                 }
                 finally
                 {
-                    await _eventLogDbContext.SaveChangesAsync();
+                    await _eventLogUnitOfWork.SaveChangesAsync();
                 }
             }
         }
@@ -61,7 +64,7 @@ namespace EventBus.EventLog.EntityFrameworkCore
         private EventLog[] RetrievePendingEventLogsInTransaction(Guid transactionId)
         {
             _logger.LogInformation("Retrieving pending events");
-            var eventLogs = _eventLogDbContext.EventLogs
+            var eventLogs = _eventLogService.EventLogs
                 .Where(e => e.TransactionId == transactionId && e.Status == Status.Pending);
             _logger.LogInformation($"{eventLogs.Count()} pending events were retrieved");
             return eventLogs.ToArray();

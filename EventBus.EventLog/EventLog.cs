@@ -5,40 +5,38 @@ namespace EventBus.EventLog
 {
     public class EventLog
     {
-        private EventLog() {}
-
         public EventLog(Event @event)
         {
             Id = Guid.NewGuid();
-            Content = JsonConvert.SerializeObject(@event, new JsonSerializerSettings());
             Status = Status.Pending;
             DateCreated = @event.Date;
-            EventName = @event.GetType().Name;
+            EventName = @event.Name;
             EventId = @event.Id;
             Event = @event;
+            Content = JsonConvert.SerializeObject(Event);
         }
 
-        public virtual void SetEventAsSent()
+        public void SetEventAsSent()
         {
             Status = Status.Sent;
             DateSent = DateTime.Now;
         }
 
-        public virtual void SetEventAsErrorSending(string error)
+        public void SetEventAsErrorSending(string error)
         {
             Status = Status.ErrorSending;
             Error = error;
         }
 
-        public Guid Id { get; private set; }
-        public string Content { get; private set; }
+        public Guid Id { get; }
+        public string Content { get; }
         public Status Status { get; private set; }
         public DateTime DateSent { get; private set; }
-        public DateTime DateCreated { get; private set; }
-        public string EventName { get; private set; }
-        public Guid EventId { get; private set; }
+        public DateTime DateCreated { get; }
+        public string EventName { get; set; }
+        public Guid EventId { get; }
         public string Error { get; private set; }
         public Guid TransactionId { get; private set; }
-        public virtual Event Event { get; private set; }
+        public Event Event { get; }
     }
 }

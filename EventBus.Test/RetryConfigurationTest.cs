@@ -11,7 +11,7 @@ namespace EventBus.Test
         {
             var configuration = new RetryPolicyConfiguration<Event>();
             Assert.IsTrue(configuration.ForeverRetry);
-            Assert.IsNull(configuration.RetryFunc);
+            Assert.IsNull(configuration.RetryTime);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace EventBus.Test
             var waitTimeInput1 = TimeSpan.FromSeconds(5);
             configuration.ForEachRetryWait(waitTimeInput1);
 
-            var waitTimeOutput1 = configuration.RetryFunc(new Failure<TestEvent>(new TestEvent(), 5,
+            var waitTimeOutput1 = configuration.RetryTime(new Failure<TestEvent>(new TestEvent(), 5,
                 new Exception()));
             Assert.AreEqual(waitTimeOutput1.TotalMilliseconds, waitTimeInput1.TotalMilliseconds);
 
@@ -47,7 +47,7 @@ namespace EventBus.Test
             var waitTimeInput2 = TimeSpan.FromSeconds(10);
             configuration.ForEachRetryWait(f => waitTimeInput2);
 
-            var waitTimeOutput2 = configuration.RetryFunc(new Failure<TestEvent>(new TestEvent(), 5,
+            var waitTimeOutput2 = configuration.RetryTime(new Failure<TestEvent>(new TestEvent(), 5,
                 new Exception()));
             Assert.AreEqual(waitTimeOutput2.TotalMilliseconds, waitTimeInput2.TotalMilliseconds);
         }

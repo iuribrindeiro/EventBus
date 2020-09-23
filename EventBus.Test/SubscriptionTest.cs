@@ -24,7 +24,7 @@ namespace EventBus.Test
         {
             var subscription = new Subscription<Event>();
             Assert.IsTrue(subscription.RetryPolicyConfiguration.ForeverRetry);
-            Assert.IsNull(subscription.RetryPolicyConfiguration.RetryFunc);
+            Assert.IsNull(subscription.RetryPolicyConfiguration.RetryTime);
         }
 
         [Test]

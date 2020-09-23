@@ -1,11 +1,10 @@
-﻿using System;
-using System.Reflection;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Logging;
+using System;
+using System.Reflection;
 
 namespace EventBus.RabbitMQ.Extensions.DependencyInjection
 {

@@ -72,19 +72,20 @@ namespace EventBus.RabbitMQ
             var subscription = _subscriptionManager.FindSubscription(eventName);
             dynamic dynamicSubscription = subscription;
             dynamic retryConfiguration = dynamicSubscription.RetryPolicyConfiguration;
+            var newAttemptCount = IncrementAttempt(eventArgs);
+            var failure = CreateFailure(subscription, @event, newAttemptCount, ex);
+            var shouldRetry = retryConfiguration.Retry(failure);
+            var retryAttemptsExceeded =
+                !retryConfiguration.ForeverRetry && newAttemptCount >= retryConfiguration.MaxRetryTimes; 
 
-
-            var currentAttempt = IncrementAttempt(eventArgs);
-
-            if (retryConfiguration.ForeverRetry || currentAttempt <= retryConfiguration.MaxRetryTimes)
+            if (shouldRetry && !retryAttemptsExceeded)
             {
-                var retryWait = RetrieveRetryWaitingTime(subscription, retryConfiguration?.RetryFunc, @event, currentAttempt, ex);
+                var retryWait = RetrieveRetryWaitingTime(subscription, failure);
                 if (retryWait.TotalMilliseconds > 0)
                 {
                     _logger.LogInformation($"Re-queueing event with delay");
                     PublishToWaitingDeadLetter(consumerChannel, eventArgs, retryWait, eventName);
                 }
-
                 else
                 {
                     _logger.LogInformation($"Re-queueing event without delay");
@@ -92,25 +93,17 @@ namespace EventBus.RabbitMQ
                         body: eventArgs.Body, basicProperties: eventArgs.BasicProperties);
                 }
             }
-            else
+            else if (!retryConfiguration.DiscardEvent(failure))
                 PublishToPermanentDeadLetter(consumerChannel, eventArgs);
         }
 
-        private TimeSpan RetrieveRetryWaitingTime(
-            ISubscription subscription, dynamic retryFunc, 
-            object @event, int attempts, Exception exception)
+        private TimeSpan RetrieveRetryWaitingTime(dynamic retryFunc, dynamic failure)
         {
             _logger.LogInformation("Retrieving retry waiting time");
-            var constructorTypeArgs = new[] {subscription.EventType};
-            _logger.LogInformation("Creating failure object");
-            var constructed = typeof(Failure<>).MakeGenericType(constructorTypeArgs);
-            dynamic instance = Activator.CreateInstance(constructed, @event, attempts, exception);
-
-            _logger.LogInformation("Calling RetryFunc");
             TimeSpan retryWait;
             try
             {
-               retryWait = retryFunc != null ? retryFunc(instance) : throw new Exception("Retry Wait cannot be null");
+               retryWait = retryFunc != null ? retryFunc(failure) : throw new Exception("Retry Wait cannot be null");
             }
             catch (Exception ex)
             {
@@ -119,6 +112,15 @@ namespace EventBus.RabbitMQ
             }
             _logger.LogInformation($"The retry waiting will bee {retryWait.TotalMilliseconds} milliseconds");
             return retryWait;
+        }
+
+        private dynamic CreateFailure(ISubscription subscription, object @event, int attempts, Exception exception)
+        {
+            var eventTypeArgs = new[] {subscription.EventType};
+            _logger.LogInformation("Creating failure object");
+            var constructedEventType = typeof(Failure<>).MakeGenericType(eventTypeArgs);
+            dynamic failure = Activator.CreateInstance(constructedEventType, @event, attempts, exception);
+            return failure;
         }
 
         private void PublishToPermanentDeadLetter(IModel consumerChannel, BasicDeliverEventArgs eventArgs)

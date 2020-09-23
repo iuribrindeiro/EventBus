@@ -12,7 +12,8 @@ namespace EventBus.EventLog.EntityFrameworkCore.Extensions.DependencyInjection
         {
             services.AddDbContext<EventLogDbContext>(optionsAction);
             services.AddScoped<IEventLogPublisher, EventLogPublisher>();
-            services.AddScoped<IPersistentEventTransaction, PersistentEventTransaction>();
+            services.AddScoped<IPersistentEventTransaction, EFPersistentEventTransaction>();
+            services.AddScoped<IEventLogService, EventLogEFService>();
             services.AddScoped<IDbContextApplicationProvider>(
                 sp => new DbContextApplicationProvider(sp.GetService<T>()));
             services.AddScoped<IEventLogDatabaseCreator>(sp => sp.GetService<EventLogDbContext>());

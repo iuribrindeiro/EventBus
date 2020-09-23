@@ -13,14 +13,14 @@ namespace RabbitMqEventLogEFExample.Controllers
         private readonly ApplicationContext _applicationContext;
         private readonly IPersistentEventTransaction _persistentEventTransaction;
         private readonly IEventLogPublisher _eventLogPublisher;
-        private readonly IEventPublisher _evetPublisher;
+        private readonly IEventLogService _eventLogService;
 
-        public ProductsController(ApplicationContext  applicationContext, IPersistentEventTransaction persistentEventTransaction, IEventLogPublisher eventLogPublisher, IEventPublisher evetPublisher)
+        public ProductsController(ApplicationContext  applicationContext, IPersistentEventTransaction persistentEventTransaction, IEventLogPublisher eventLogPublisher, IEventLogService eventLogService)
         {
             _applicationContext = applicationContext;
             _persistentEventTransaction = persistentEventTransaction;
             _eventLogPublisher = eventLogPublisher;
-            _evetPublisher = evetPublisher;
+            _eventLogService = eventLogService;
         }
 
         [HttpPost]
@@ -53,7 +53,7 @@ namespace RabbitMqEventLogEFExample.Controllers
             else
                 _applicationContext.Deposits.Add(deposit);
 
-            _persistentEventTransaction.AddEvent(new DepositProductCountChandedEvent(deposit.ProductCount, oldCount));
+            _eventLogService.AddEvent(new DepositProductCountChandedEvent(deposit.ProductCount, oldCount));
             return true;
         }
 
@@ -62,7 +62,7 @@ namespace RabbitMqEventLogEFExample.Controllers
             _applicationContext.Products.Add(product);
             for (int i = 0; i < 50; i++)
             {
-                _persistentEventTransaction.AddEvent(new NewProductAddedEvent(product));
+                _eventLogService.AddEvent(new NewProductAddedEvent(product));
             }
         }
     }

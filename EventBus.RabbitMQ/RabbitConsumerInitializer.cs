@@ -23,6 +23,7 @@ namespace EventBus.RabbitMQ
             _rabbitConsumerHandler = rabbitConsumerHandler;
             _logger = logger;
             _rabbitMqEventBusOptions = options.Value;
+            EnsureQueueAndExchangeAreCreated();
         }
 
         public async Task InitializeConsumersChannelsAsync()
@@ -31,8 +32,6 @@ namespace EventBus.RabbitMQ
                 _persistentConnection.TryConnect();
 
             _logger.LogInformation("Initializing consumer");
-
-            EnsureQueueAndExchangeAreCreated();
 
             var consumerStarts = new List<Task>();
             for (int i = 0; i < _rabbitMqEventBusOptions.ConsumersCount; i++)
@@ -62,6 +61,9 @@ namespace EventBus.RabbitMQ
 
         private void EnsureQueueAndExchangeAreCreated()
         {
+            if (!_persistentConnection.IsConnected)
+                _persistentConnection.TryConnect();
+            
             using var channel = _persistentConnection.CreateModel();
             channel.ExchangeDeclare(exchange: _rabbitMqEventBusOptions.ExchangeName, type: "topic");
             channel.QueueDeclare(_rabbitMqEventBusOptions.QueueName, durable: true, autoDelete: false, exclusive: false);

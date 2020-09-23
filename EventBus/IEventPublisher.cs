@@ -6,5 +6,6 @@ namespace EventBus
     {
         Task PublishAsync<T>(T @event) where T : Event;
         Task PublishManyAsync(Event[] @events);
+        Task PublishManyAsync(EventPublishRequest[] publishRequests);
     }
 } 

@@ -10,6 +10,7 @@ namespace EventBus
         {
             Id = Guid.NewGuid();
             Date = DateTime.Now;
+            Name = GetType().Name;
         }
 
         [JsonProperty("Id")]
@@ -17,5 +18,8 @@ namespace EventBus
 
         [JsonProperty("Date")]
         public virtual DateTime Date { get; private set; }
+
+        [JsonProperty("Name")]
+        public virtual string Name { get; private set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace EventBus.EventLog.EntityFrameworkCore
 {
-    internal class DbContextApplicationProvider : IDbContextApplicationProvider
+    public class DbContextApplicationProvider : IDbContextApplicationProvider
     {
         public DbContextApplicationProvider(DbContext dbContext) 
             => DbContext = dbContext;
